@@ -1,0 +1,183 @@
+Heuristic Analysis
+
+To come up with a heuristic for evaluation function, I tried to consider the parameters which can lead to more winning for the computer player if game is continued to the end.
+
+As "sample_player.py" is suggesting, some of the parametres which may be important are:
+
+1-Number of available moves for the computer player, the greater the better.
+2-Number of available moves for the opponent, the smaller the better.
+3-Distance from the center of game board, the smaller the better.
+4-Another parameter I thought can show if the computer player is in good state, is how many of the next moves is in common between computer player and the opponent. The parameter is named "intersect_num" and the smaller the better.
+
+-custom_score: 2 * own_moves  -   opp_moves 
+
+This is similar to improved score but gives more weight to the states which computer player had more moves.
+
+-custom_score_2: 5 * own_moves  -  10 * opp_moves  - 3 * intersect_num  -  2 * radius  
+
+For this score, I tried to give positive and negative scores to the above parameters and tried different coefficients
+to get higher result than AB_Improved player.
+
+-custom_score_2: (0.1 + own_moves * own_moves  ) / ( (0.1 +  opp_moves ) * (radius +0.1) * (intersect_num + .1)  )
+
+For this score, I used the above parameters, but instead of adding and subtracting them, I used multiplication and division to calculate value for each state.
+
+
+Using the above custom scores I ran the tournament 10 times which the result table are shown below the report. The average win rate based on the tables are:
+
+-Average win rate for AB_Improved: 62.3%
+-Average win rate for AB_Custom: 67.1%
+-Average win rate for AB_Custom_2: 70.7%
+-Average win rate for AB_Custom_3: 69%
+
+
+-Average win rate for AB_Custom against MM_Improved : 64%
+-Average win rate for AB_Custom against AB_Improved : 49%
+
+-Average win rate for AB_Custom_2 against MM_Improved : 69%
+-Average win rate for AB_Custom_2 against AB_Improved : 54%
+
+-Average win rate for AB_Custom_3 against MM_Improved : 65%
+-Average win rate for AB_Custom_3 against AB_Improved : 58%
+
+
+
+Based on the above average values and the tables below, although AB_Custom_3 is close to AB_Custom_2 too but I choose AB_Custom_2 for the following reasons:
+
+1- It has the best average performance among the 3
+2- It wins in 96% of the games against other players with the win rate greater than 50%, showing stability in winning.
+3- Although it is more complex than AB_Improved, but it is still fairly simple and can go deep enough to have better performance than AB_Improved in 54% of the time.
+4- It considers various parameters from computer player moves, opponent moves and their intersection, and also the radius, each of which have positive or negative effect on the state of the game and tries to evaluate each state considering all of those parameters.
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random      10  |   0     8  |   2    10  |   0    10  |   0  
+    2       MM_Open      5  |   5     8  |   2     6  |   4     6  |   4  
+    3      MM_Center     8  |   2    10  |   0    10  |   0     9  |   1  
+    4     MM_Improved    7  |   3     5  |   5     8  |   2     7  |   3  
+    5       AB_Open      3  |   7     7  |   3     8  |   2     5  |   5  
+    6      AB_Center     4  |   6     5  |   5     4  |   6     8  |   2  
+    7     AB_Improved    4  |   6     5  |   5     6  |   4     6  |   4  
+--------------------------------------------------------------------------
+           Win Rate:      58.6%        68.6%        74.3%        72.9%    
+
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       7  |   3    10  |   0     9  |   1    10  |   0  
+    2       MM_Open      5  |   5     7  |   3     5  |   5     5  |   5  
+    3      MM_Center     9  |   1     9  |   1     7  |   3     8  |   2  
+    4     MM_Improved    5  |   5     7  |   3     6  |   4     6  |   4  
+    5       AB_Open      5  |   5     6  |   4     7  |   3     4  |   6  
+    6      AB_Center     5  |   5     6  |   4     6  |   4     5  |   5  
+    7     AB_Improved    6  |   4     5  |   5     6  |   4     6  |   4  
+--------------------------------------------------------------------------
+           Win Rate:      60.0%        71.4%        65.7%        62.9% 
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random      10  |   0     9  |   1     9  |   1     8  |   2  
+    2       MM_Open      4  |   6     9  |   1     9  |   1     8  |   2  
+    3      MM_Center     6  |   4     8  |   2     8  |   2     8  |   2  
+    4     MM_Improved    6  |   4     6  |   4     8  |   2     6  |   4  
+    5       AB_Open      6  |   4     4  |   6     7  |   3     5  |   5  
+    6      AB_Center     4  |   6     3  |   7     7  |   3     5  |   5  
+    7     AB_Improved    6  |   4     4  |   6     5  |   5     7  |   3  
+--------------------------------------------------------------------------
+           Win Rate:      60.0%        61.4%        75.7%        67.1%  
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       9  |   1    10  |   0    10  |   0    10  |   0  
+    2       MM_Open      7  |   3     6  |   4     7  |   3     9  |   1  
+    3      MM_Center     6  |   4     8  |   2     7  |   3     7  |   3  
+    4     MM_Improved    7  |   3     5  |   5     6  |   4     8  |   2  
+    5       AB_Open      3  |   7     7  |   3     6  |   4     6  |   4  
+    6      AB_Center     3  |   7     3  |   7     6  |   4     6  |   4  
+    7     AB_Improved    6  |   4     4  |   6     5  |   5     3  |   7  
+--------------------------------------------------------------------------
+           Win Rate:      58.6%        61.4%        67.1%        70.0% 
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       9  |   1     9  |   1     9  |   1    10  |   0  
+    2       MM_Open      6  |   4     5  |   5     6  |   4     6  |   4  
+    3      MM_Center     7  |   3     9  |   1     9  |   1     8  |   2  
+    4     MM_Improved    7  |   3     6  |   4     9  |   1     5  |   5  
+    5       AB_Open      4  |   6     4  |   6     5  |   5     3  |   7  
+    6      AB_Center     5  |   5     4  |   6     5  |   5     6  |   4  
+    7     AB_Improved    6  |   4     5  |   5     4  |   6     7  |   3  
+--------------------------------------------------------------------------
+           Win Rate:      62.9%        60.0%        67.1%        64.3%            
+           
+
+     Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random      10  |   0     9  |   1    10  |   0     9  |   1  
+    2       MM_Open      5  |   5     7  |   3     6  |   4     8  |   2  
+    3      MM_Center     7  |   3     8  |   2    10  |   0     8  |   2  
+    4     MM_Improved    8  |   2     6  |   4     6  |   4     8  |   2  
+    5       AB_Open      5  |   5     7  |   3     5  |   5     7  |   3  
+    6      AB_Center     5  |   5     5  |   5     6  |   4     7  |   3  
+    7     AB_Improved    6  |   4     6  |   4     8  |   2     6  |   4  
+--------------------------------------------------------------------------
+           Win Rate:      65.7%        68.6%        72.9%        75.7%     
+
+Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       9  |   1     9  |   1     8  |   2    10  |   0  
+    2       MM_Open      7  |   3     7  |   3     8  |   2     8  |   2  
+    3      MM_Center     7  |   3     8  |   2     9  |   1     9  |   1  
+    4     MM_Improved    6  |   4     7  |   3     7  |   3     6  |   4  
+    5       AB_Open      5  |   5     6  |   4     7  |   3     5  |   5  
+    6      AB_Center     4  |   6     6  |   4     7  |   3     6  |   4  
+    7     AB_Improved    7  |   3     5  |   5     5  |   5     8  |   2  
+--------------------------------------------------------------------------
+           Win Rate:      64.3%        68.6%        72.9%        74.3%    
+
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       8  |   2     9  |   1     9  |   1    10  |   0  
+    2       MM_Open      8  |   2     7  |   3     7  |   3     7  |   3  
+    3      MM_Center     7  |   3     9  |   1     9  |   1     7  |   3  
+    4     MM_Improved    6  |   4     7  |   3     7  |   3     6  |   4  
+    5       AB_Open      5  |   5     6  |   4     7  |   3     7  |   3  
+    6      AB_Center     5  |   5     4  |   6     4  |   6     3  |   7  
+    7     AB_Improved    5  |   5     3  |   7     6  |   4     6  |   4  
+--------------------------------------------------------------------------
+           Win Rate:      62.9%        64.3%        70.0%        65.7%   
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       9  |   1     9  |   1    10  |   0     7  |   3  
+    2       MM_Open      6  |   4     8  |   2     8  |   2     6  |   4  
+    3      MM_Center     8  |   2     9  |   1     8  |   2     9  |   1  
+    4     MM_Improved    5  |   5     7  |   3     6  |   4     7  |   3  
+    5       AB_Open      7  |   3     6  |   4     7  |   3     7  |   3  
+    6      AB_Center     6  |   4     7  |   3     6  |   4     7  |   3  
+    7     AB_Improved    4  |   6     6  |   4     3  |   7     3  |   7  
+--------------------------------------------------------------------------
+           Win Rate:      64.3%        74.3%        68.6%        65.7%    
+
+ Match #   Opponent    AB_Improved   AB_Custom   AB_Custom_2  AB_Custom_3 
+                        Won | Lost   Won | Lost   Won | Lost   Won | Lost 
+    1       Random       9  |   1     9  |   1     9  |   1     9  |   1  
+    2       MM_Open      7  |   3     7  |   3     8  |   2     8  |   2  
+    3      MM_Center     8  |   2    10  |   0    10  |   0     9  |   1  
+    4     MM_Improved    6  |   4     8  |   2     6  |   4     6  |   4  
+    5       AB_Open      5  |   5     6  |   4     5  |   5     6  |   4  
+    6      AB_Center     5  |   5     5  |   5     7  |   3     6  |   4  
+    7     AB_Improved    6  |   4     6  |   4     6  |   4     6  |   4  
+--------------------------------------------------------------------------
+           Win Rate:      65.7%        72.9%        72.9%        71.4% 
+
+
+
+
